@@ -8,6 +8,7 @@ int yyparse();
 extern FILE *yyin;
 extern Script *root;
 int CounterLabel = 0;
+int doWhileLabel = 0;
 
 void CodeGeneration(char* inputfile, Script* root)
 {
