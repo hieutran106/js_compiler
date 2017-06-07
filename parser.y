@@ -49,7 +49,7 @@ Script *root;
 %type <statementlist> StatementList StatementList_opt
 %type <listItem> StatementListItem
 
-%type <statement> Statement BlockStatement Block ExpressionStatement IfStatement
+%type <statement> Statement BlockStatement Block ExpressionStatement IfStatement BreakableStatement IterationStatement DoWhileStatement
 %type <expression> Expression AssignmentExpression ConditionalExpression LogicalORExpression LogicalANDExpression BitwiseORExpression BitwiseXORExpression BitwiseANDExpression EqualityExpression RelationalExpression ShiftExpression AdditiveExpression MultiplicativeExpression ExponentiationExpression UnaryExpression UpdateExpression LeftHandSideExpression NewExpression MemberExpression PrimaryExpression 
 %type <expression> IdentifierReference Literal NumericLiteral Identifier DecimalLiteral IdentifierName
 
@@ -93,7 +93,7 @@ Statement
 	| EmptyStatement
 	| ExpressionStatement														{ $$ = $1; }
 	| IfStatement																{ $$ = $1; }
-	| BreakableStatement
+	| BreakableStatement														{ $$ = $1; }
 	| ContinueStatement
 	| BreakStatement
 	| ReturnStatement
@@ -132,7 +132,7 @@ IfStatement
 	;
 
 BreakableStatement
-	: 
+	: IterationStatement                                                         { $$ = new BreakableStatement($1);}
 	;
 
 ContinueStatement
@@ -177,7 +177,13 @@ Expression
 	: AssignmentExpression														{ $$ = $1; }
 	| Expression ',' AssignmentExpression
 	;
+IterationStatement
+	: DoWhileStatement															{ $$ = new IterationStatement($1);}
+	;
 
+DoWhileStatement
+	: DO Statement WHILE '(' Expression ')'	';'									{ $$ = new DoWhileStatement($2,$5);}							
+	;
 /* Level 4 */
 AssignmentExpression
 	: ConditionalExpression														{ $$ = new AssignmentExpression($1); }

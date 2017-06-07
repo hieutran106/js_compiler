@@ -112,8 +112,9 @@ public:
 	DoWhileStatement(Statement *stmt,Expression *cond):stmt(stmt),cond(cond){}
 	void dump(int indent) override {
 		label(indent, "DoWhileStatement\n");
-		cond->dump(indent + 1, "cond");
 		stmt->dump(indent + 1, "stmt");
+		cond->dump(indent + 1, "cond");
+		
 	}
 	void GenCode(FILE* file) override {
 		//fix me
