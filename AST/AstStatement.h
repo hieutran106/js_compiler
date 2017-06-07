@@ -76,3 +76,46 @@ public:
 		}
 	}
 };
+
+class BreakableStatement :public Statement
+{
+	Statement *stmt;
+public:
+	explicit BreakableStatement(Statement *stmt):stmt(stmt){}
+	void dump(int indent) override {
+		label(indent, "BreakableStatement\n");
+		stmt->dump(indent + 1);
+	}
+	void GenCode(FILE* file) override {
+		stmt->GenCode(file);
+	}
+
+};
+class IterationStatement: public Statement
+{
+	Statement *stmt;
+public:
+	explicit IterationStatement(Statement *stmt) :stmt(stmt) {}
+	void dump(int indent) override {
+		label(indent, "IterationStatement\n");
+		stmt->dump(indent + 1);
+	}
+	void GenCode(FILE* file) override {
+		stmt->GenCode(file);
+	}
+};
+class DoWhileStatement:public Statement
+{
+	Statement *stmt;
+	Expression *cond;
+public:
+	DoWhileStatement(Statement *stmt,Expression *cond):stmt(stmt),cond(cond){}
+	void dump(int indent) override {
+		label(indent, "DoWhileStatement\n");
+		cond->dump(indent + 1, "cond");
+		stmt->dump(indent + 1, "stmt");
+	}
+	void GenCode(FILE* file) override {
+		//fix me
+	}
+};
