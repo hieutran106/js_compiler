@@ -182,7 +182,8 @@ IterationStatement
 	;
 
 DoWhileStatement
-	: DO Statement WHILE '(' Expression ')'	';'									{ $$ = new DoWhileStatement($2,$5);}							
+	: DO Statement WHILE '(' Expression ')'	';'									{ $$ = new DoWhileStatement($2,$5);}
+	: WHILE '(' Expression ')' Statement										{ $$ = new WhileStatement($5,$3);  }							
 	;
 /* Level 4 */
 AssignmentExpression

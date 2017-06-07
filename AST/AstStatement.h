@@ -4,7 +4,7 @@
 
 
 using namespace std;
-extern int doWhileLabel;
+extern int iterationLabel;
 class BlockStatement : public Statement {
 	Statement *statement;
 public:
@@ -117,11 +117,31 @@ public:
 		
 	}
 	void GenCode(FILE* file) override {
-		emit(file, "DoWhileLabel%d:", doWhileLabel);
+		emit(file, "DoWhileLabel%d:", iterationLabel);
 		stmt->GenCode(file);
 		int refno = cond->GenCode(file);
 		emit(file, "if (GetValue(r%d)->ToBoolean()) {", refno);
-		emit(file, "goto DoWhileLabel%d;", doWhileLabel);
+		emit(file, "goto DoWhileLabel%d;", iterationLabel);
+		emit(file, "}");
+	}
+};
+class WhileStatement:public Statement
+{
+	Statement *stmt;
+	Expression *cond;
+public:
+	WhileStatement(Statement *stmt, Expression *cond) :stmt(stmt), cond(cond) {}
+	void dump(int indent) override {
+		label(indent, "WhileStatement\n");
+		stmt->dump(indent + 1, "stmt");
+		cond->dump(indent + 1, "cond");
+	}
+	void GenCode(FILE* file) override {		
+		int refno = cond->GenCode(file);
+		emit(file, "WhileLabel%d:", iterationLabel);
+		emit(file, "if (GetValue(r%d)->ToBoolean()) {", refno);
+		stmt->GenCode(file);
+		emit(file, "goto DoWhileLabel%d;", iterationLabel);
 		emit(file, "}");
 	}
 };

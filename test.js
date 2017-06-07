@@ -1,5 +1,5 @@
 x = 45;
-do {
+while (x < 50) {
     x++;
-} while (x < 50);
+}
 y = x;
